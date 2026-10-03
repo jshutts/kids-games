@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Game Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Layout: two big game "cartridges" side by side, stacking on narrow screens. */
+:root{--ink:#3b2a4a;--bg:#fff7e8;--pup:#e2a65c;--pup-bg:#bfe6ff;--uni:#ff6fae;--uni-bg:#ffe3f1;--font:"Baloo 2","Trebuchet MS",system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font)}
+body{padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:18px;
+  background-image:radial-gradient(circle at 10% 20%,#ffe9a8 0 40px,transparent 41px),radial-gradient(circle at 90% 80%,#ffd6ec 0 60px,transparent 61px)}
+h1{margin:8px 0 0;font-size:clamp(36px,7vw,60px);line-height:1;text-align:center}
+p.sub{margin:0;font-size:20px;text-align:center}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;width:min(1100px,100%)}
+a.game{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:var(--ink);border:4px solid var(--ink);border-radius:28px;padding:20px 16px 22px;box-shadow:0 8px 0 var(--ink);transition:transform .1s}
+a.game:hover{transform:translateY(-3px)}
+a.game:active{transform:translateY(5px);box-shadow:0 3px 0 var(--ink)}
+a.game:focus-visible{outline:4px solid var(--uni);outline-offset:4px}
+.pup{background:var(--pup-bg)}.sea{background:#c5f6fa}.sea .play{background:#1c7ed6}.sub2{font-size:18px;font-weight:800;color:#1c7ed6;margin-top:-6px}.uni{background:var(--uni-bg)}
+.emoji{font-size:96px;line-height:1.1}
+.name{font-size:36px;font-weight:800;line-height:1}
+.desc{font-size:18px;text-align:center;max-width:30ch}
+.play{margin-top:6px;font-size:22px;font-weight:800;color:#fff;border:3px solid var(--ink);border-radius:16px;padding:4px 22px}
+.pup .play{background:#4caf50}.uni .play{background:var(--uni)}
+</style>
+</head>
+<body>
+<h1>Pick a game!</h1>
+<p class="sub">Which one do you want to play?</p>
+<div class="games">
+  <a class="game pup" href="pawcraft/">
+    <div class="emoji">🐶</div>
+    <div class="name">Pawcraft</div>
+    <div class="desc">Be a puppy! Dig, craft and escape the dog catchers.</div>
+    <div class="play">Play ▶</div>
+  </a>
+  <a class="game uni" href="unicorn/">
+    <div class="emoji">🦄</div>
+    <div class="name">Sparkle Stable</div>
+    <div class="desc">Take care of your unicorn and dress it up!</div>
+    <div class="play">Play ▶</div>
+  </a>
+  <a class="game sea" href="turtle/">
+    <div class="emoji">🐢</div>
+    <div class="name">Dig Deeper</div>
+    <div class="sub2">Descend to Shell</div>
+    <div class="desc">Be a sea turtle! Dig for gems and sell them to a grumpy crab.</div>
+    <div class="play">Play ▶</div>
+  </a>
+</div>
+</body>
+</html>
