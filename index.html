@@ -26,6 +26,11 @@ a.game:focus-visible{outline:4px solid var(--uni);outline-offset:4px}
 .name{font-size:36px;font-weight:800;line-height:1}
 .desc{font-size:18px;text-align:center;max-width:30ch}
 .play{margin-top:6px;font-size:22px;font-weight:800;color:#fff;border:3px solid var(--ink);border-radius:16px;padding:4px 22px}
+.grown{width:min(1100px,100%);margin-top:28px;border-top:3px dashed #c9b8a0;padding-top:14px}
+.grown summary{cursor:pointer;font-size:20px;font-weight:800;text-align:center;color:#7a6a5a;list-style:none}
+.grown summary::-webkit-details-marker{display:none}
+.grown .warn{text-align:center;font-size:16px;color:#a33;margin:8px 0 14px}
+.adult{background:#2a2430;color:#efe6cf}.adult .play{background:#c81e1e}
 .pup .play{background:#4caf50}.uni .play{background:var(--uni)}
 </style>
 </head>
@@ -53,5 +58,23 @@ a.game:focus-visible{outline:4px solid var(--uni);outline-offset:4px}
     <div class="play">Play ▶</div>
   </a>
 </div>
+<details class="grown">
+  <summary>🔞 Grown-ups only</summary>
+  <p class="warn">These have cartoon pixel gore. Not for little kids!</p>
+  <div class="games">
+    <a class="game adult" href="trouble/">
+      <div class="emoji">🕳️</div>
+      <div class="name">Hole Lotta Trouble</div>
+      <div class="desc">You can't fight the monsters. Trick them into holes, traps and woodchippers.</div>
+      <div class="play">Play ▶</div>
+    </a>
+    <a class="game adult" href="shroom/">
+      <div class="emoji">🍄</div>
+      <div class="name">Shroom</div>
+      <div class="desc">Doom, but with mushroom slingshots versus gnomes, fairies and a giant tree.</div>
+      <div class="play">Play ▶</div>
+    </a>
+  </div>
+</details>
 </body>
 </html>
