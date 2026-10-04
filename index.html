@@ -15,6 +15,7 @@ html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-fa
 body{padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:18px;
   background-image:radial-gradient(circle at 10% 20%,#ffe9a8 0 40px,transparent 41px),radial-gradient(circle at 90% 80%,#ffd6ec 0 60px,transparent 61px)}
 h1{margin:8px 0 0;font-size:clamp(36px,7vw,60px);line-height:1;text-align:center}
+p.tip{margin:0;font-size:15px;text-align:center;opacity:.75}
 p.sub{margin:0;font-size:20px;text-align:center}
 .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;width:min(1100px,100%)}
 a.game{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:var(--ink);border:4px solid var(--ink);border-radius:28px;padding:20px 16px 22px;box-shadow:0 8px 0 var(--ink);transition:transform .1s}
@@ -33,6 +34,7 @@ a.game:focus-visible{outline:4px solid var(--uni);outline-offset:4px}
 <body>
 <h1>Pick a game!</h1>
 <p class="sub">Which one do you want to play?</p>
+<p class="tip">Tip: tap <b>⤢</b> in a game for full screen. On an iPhone, tap Share → <b>Add to Home Screen</b> instead.</p>
 <div class="games">
   <a class="game pup" href="pawcraft/">
     <div class="emoji">🐶</div>

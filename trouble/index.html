@@ -72,7 +72,7 @@ kbd{font-family:var(--px);border:2px solid #bdb5a0;padding:1px 4px;font-size:10p
   <span id="dash" class="ready">DASH</span>
   <span id="lvlName"></span>
 </div>
-<div id="hudBtns" hidden><button class="hb" id="pauseBtn">II</button><button class="hb" id="muteBtn">♪</button></div>
+<div id="hudBtns" hidden><button class="hb" id="pauseBtn">II</button><button class="hb" id="muteBtn">♪</button><button class="hb" data-fs>⤢</button></div>
 <button id="dashBtn">DASH</button>
 
 <div class="overlay" id="title">
@@ -82,10 +82,11 @@ kbd{font-family:var(--px);border:2px solid #bdb5a0;padding:1px 4px;font-size:10p
     <p>You can't fight them. You can only <b>trip</b> them.<br>Lure the monsters into holes, traps and worse. Don't fall in yourself.</p>
     <div class="levels" id="levelList"></div>
     <div class="keys">
-      <kbd>WASD</kbd>/<kbd>ARROWS</kbd> run &nbsp; <kbd>SPACE</kbd> dash &nbsp; <kbd>P</kbd> pause<br>
+      <kbd>WASD</kbd>/<kbd>ARROWS</kbd> run &nbsp; <kbd>SPACE</kbd> dash &nbsp; <kbd>P</kbd> pause &nbsp; <kbd>F</kbd> full screen<br>
       Touch: drag on the left side to run, tap DASH.<br>
       Red buttons on the ground open trapdoors.
     </div>
+    <p><button class="btn alt" data-fs data-fs-on="⤢ FULL SCREEN" data-fs-off="EXIT FULL SCREEN"></button></p>
     <p><a href="../" style="color:#bdb5a0;font-size:10px">&larr; ALL GAMES</a></p>
   </div>
 </div>
@@ -127,6 +128,30 @@ kbd{font-family:var(--px);border:2px solid #bdb5a0;padding:1px 4px;font-size:10p
   const unzoom=()=>{const vv=window.visualViewport;if(vv&&vv.scale>1.01){meta.setAttribute('content',base+',minimum-scale=1');setTimeout(()=>meta.setAttribute('content',base),300)}};
   if(window.visualViewport){visualViewport.addEventListener('resize',()=>setTimeout(unzoom,400))}
   setInterval(unzoom,1500);
+})();
+</script>
+<script>
+// ---- Fullscreen toggle: any element with data-fs becomes a fullscreen button (hidden where the browser can't do it, e.g. iPhone Safari) ----
+window.FS=(function(){
+  const d=document.documentElement;
+  const can=!!(d.requestFullscreen||d.webkitRequestFullscreen);
+  const is=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  function toggle(){
+    try{
+      if(is()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+      else{const r=(d.requestFullscreen||d.webkitRequestFullscreen).call(d,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{})}
+    }catch(e){}
+  }
+  function label(){document.querySelectorAll('[data-fs]').forEach(b=>{b.textContent=is()?(b.dataset.fsOff||'\u2715'):(b.dataset.fsOn||'\u2922');b.title=is()?'Exit full screen':'Full screen'})}
+  function setup(){
+    document.querySelectorAll('[data-fs]').forEach(b=>{
+      if(!can){b.hidden=true;return}
+      b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle();b.blur()});
+    });
+    document.addEventListener('fullscreenchange',label);document.addEventListener('webkitfullscreenchange',label);label();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+  return{can,is,toggle};
 })();
 </script>
 <script>
@@ -650,7 +675,7 @@ function doDash(){if(state!=='play'||P.state!=='walk'||P.dashCd>0)return;P.dash=
 
 // input
 addEventListener('keydown',e=>{initAudio();const k=e.key.toLowerCase();keys[k]=true;if(k.startsWith('arrow')||k===' ')e.preventDefault();
-  if(e.repeat)return;if(k===' ')doDash();if(k==='p'||k==='escape')togglePause();if(k==='enter'&&state==='intro')$('goBtn').click()});
+  if(e.repeat)return;if(k===' ')doDash();if(k==='f')FS.toggle();if(k==='p'||k==='escape')togglePause();if(k==='enter'&&state==='intro')$('goBtn').click()});
 addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;joy.on=false;if(state==='play')togglePause()});
 if(matchMedia('(pointer:coarse)').matches)document.body.classList.add('touch');

@@ -48,6 +48,7 @@ body.touch #touchUI{display:block}
 #tFire{right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));width:96px;height:96px}
 #tUse{right:calc(128px + env(safe-area-inset-right,0px));bottom:calc(26px + env(safe-area-inset-bottom,0px));width:62px;height:62px}
 #tSwap{right:calc(30px + env(safe-area-inset-right,0px));bottom:calc(140px + env(safe-area-inset-bottom,0px));width:62px;height:62px}
+#tFs{right:calc(64px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));width:44px;height:44px;border-radius:8px;font-size:18px}
 #tPause{right:calc(12px + env(safe-area-inset-right,0px));top:calc(12px + env(safe-area-inset-top,0px));width:44px;height:44px;border-radius:8px}
 #rotate{display:none;position:fixed;inset:0;z-index:40;background:var(--void);place-items:center;text-align:center;padding:24px;font-size:13px;line-height:2}
 @media (orientation:portrait) and (max-width:700px){ body.touch:not(.portraitOk) #rotate{display:grid} }
@@ -55,7 +56,7 @@ body.touch #touchUI{display:block}
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="touchUI"><button class="tb" id="tFire">FIRE</button><button class="tb" id="tUse">USE</button><button class="tb" id="tSwap">SWAP</button><button class="tb" id="tPause">II</button></div>
+<div id="touchUI"><button class="tb" id="tFire">FIRE</button><button class="tb" id="tUse">USE</button><button class="tb" id="tSwap">SWAP</button><button class="tb" id="tPause">II</button><button class="tb" id="tFs" data-fs>⤢</button></div>
 
 <div class="overlay" id="title">
   <div class="card">
@@ -69,12 +70,13 @@ body.touch #touchUI{display:block}
       <span><i style="background:#a050e0"></i>PURPLE PUFFBALL: boom</span>
     </div>
     <div class="levels" id="levelList"></div>
-    <div class="keys"><kbd>WASD</kbd> move &nbsp;<kbd>MOUSE</kbd>/<kbd>←→</kbd> turn &nbsp;<kbd>CLICK</kbd>/<kbd>CTRL</kbd> fire<br><kbd>E</kbd>/<kbd>SPACE</kbd> open &nbsp;<kbd>1-4</kbd> weapons &nbsp;<kbd>SHIFT</kbd> run &nbsp;<kbd>P</kbd> pause<br>Touch: left side moves, right side turns.</div>
+    <div class="keys"><kbd>WASD</kbd> move &nbsp;<kbd>MOUSE</kbd>/<kbd>←→</kbd> turn &nbsp;<kbd>CLICK</kbd>/<kbd>CTRL</kbd> fire<br><kbd>E</kbd>/<kbd>SPACE</kbd> open &nbsp;<kbd>1-4</kbd> weapons &nbsp;<kbd>SHIFT</kbd> run &nbsp;<kbd>P</kbd> pause &nbsp;<kbd>F</kbd> full screen<br>Touch: left side moves, right side turns.</div>
+    <p><button class="btn alt" data-fs data-fs-on="⤢ FULL SCREEN" data-fs-off="EXIT FULL SCREEN"></button></p>
     <p><a href="../" style="color:#bdb5a0;font-size:10px">&larr; ALL GAMES</a></p>
   </div>
 </div>
 <div class="overlay" id="intro" hidden><div class="card"><h2 id="introName"></h2><p id="introText"></p><button class="btn" id="goBtn">LET'S GO</button></div></div>
-<div class="overlay" id="paused" hidden><div class="card"><h2>PAUSED</h2><button class="btn" id="resumeBtn">RESUME</button><button class="btn alt" id="quitBtn">LEVEL SELECT</button></div></div>
+<div class="overlay" id="paused" hidden><div class="card"><h2>PAUSED</h2><button class="btn" id="resumeBtn">RESUME</button><button class="btn alt" id="quitBtn">LEVEL SELECT</button><button class="btn alt" data-fs data-fs-on="⤢ FULL SCREEN" data-fs-off="EXIT FULL SCREEN"></button></div></div>
 <div class="overlay" id="dead" hidden><div class="card"><h2 style="color:var(--cap)">YOU WERE COMPOSTED</h2><p id="deadText"></p><button class="btn" id="retryBtn">TRY AGAIN</button><button class="btn alt" id="deadQuit">LEVEL SELECT</button></div></div>
 <div class="overlay" id="done" hidden><div class="card"><h2 id="doneTitle">LEVEL COMPLETE</h2><p id="doneText"></p><button class="btn" id="nextBtn">NEXT LEVEL</button><button class="btn alt" id="doneQuit">LEVEL SELECT</button></div></div>
 <div id="rotate"><div>TURN YOUR DEVICE SIDEWAYS<br><br><button class="btn alt" id="portraitOk">PLAY ANYWAY</button></div></div>
@@ -93,6 +95,30 @@ body.touch #touchUI{display:block}
   const unzoom=()=>{const vv=window.visualViewport;if(vv&&vv.scale>1.01){meta.setAttribute('content',base+',minimum-scale=1');setTimeout(()=>meta.setAttribute('content',base),300)}};
   if(window.visualViewport){visualViewport.addEventListener('resize',()=>setTimeout(unzoom,400))}
   setInterval(unzoom,1500);
+})();
+</script>
+<script>
+// ---- Fullscreen toggle: any element with data-fs becomes a fullscreen button (hidden where the browser can't do it, e.g. iPhone Safari) ----
+window.FS=(function(){
+  const d=document.documentElement;
+  const can=!!(d.requestFullscreen||d.webkitRequestFullscreen);
+  const is=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  function toggle(){
+    try{
+      if(is()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+      else{const r=(d.requestFullscreen||d.webkitRequestFullscreen).call(d,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{})}
+    }catch(e){}
+  }
+  function label(){document.querySelectorAll('[data-fs]').forEach(b=>{b.textContent=is()?(b.dataset.fsOff||'\u2715'):(b.dataset.fsOn||'\u2922');b.title=is()?'Exit full screen':'Full screen'})}
+  function setup(){
+    document.querySelectorAll('[data-fs]').forEach(b=>{
+      if(!can){b.hidden=true;return}
+      b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle();b.blur()});
+    });
+    document.addEventListener('fullscreenchange',label);document.addEventListener('webkitfullscreenchange',label);label();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+  return{can,is,toggle};
 })();
 </script>
 <script>
@@ -603,7 +629,7 @@ addEventListener('wheel',e=>{if(state==='play')cycleWeapon(e.deltaY>0?1:-1)},{pa
 function cycleWeapon(dir){for(let k=1;k<=4;k++){const i=(P.w+dir*k+8)%4;if(P.has[i]){P.w=i;say(WEAPONS[i].name);return}}}
 function useKey(){if(state!=='play'||!G)return;const tx=Math.floor(P.x+Math.cos(P.a)*.9),ty=Math.floor(P.y+Math.sin(P.a)*.9);tryDoor(tx,ty,true)}
 addEventListener('keydown',e=>{initAudio();const k=e.key.toLowerCase();keys[k]=true;if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();if(e.repeat)return;
-  if(k==='e'||k===' ')useKey();if('1234'.includes(k)&&k.length===1){const i=+k-1;if(P.has[i]){P.w=i;say(WEAPONS[i].name)}}if(k==='q')cycleWeapon(1);if(k==='p'||k==='escape')togglePause();if(k==='enter'&&state==='intro')play()});
+  if(k==='e'||k===' ')useKey();if('1234'.includes(k)&&k.length===1){const i=+k-1;if(P.has[i]){P.w=i;say(WEAPONS[i].name)}}if(k==='q')cycleWeapon(1);if(k==='f')FS.toggle();if(k==='p'||k==='escape')togglePause();if(k==='enter'&&state==='intro')play()});
 addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 addEventListener('blur',()=>{for(const k in keys)keys[k]=false;if(state==='play')togglePause()});
 // touch: left half = move stick, right half = drag to turn

@@ -108,6 +108,7 @@ body.gaming #bottom,body.gaming #top .iconBtn{visibility:hidden}
     <div id="meters"></div>
     <div id="stars">⭐ 0</div>
     <button class="iconBtn" id="muteBtn" title="Sound">🔊</button>
+    <button class="iconBtn" data-fs title="Full screen">⤢</button>
   </div>
   <div id="stage">
     <div id="sceneWrap"><canvas id="scene"></canvas><div id="toast"></div></div>
@@ -164,6 +165,30 @@ body.gaming #bottom,body.gaming #top .iconBtn{visibility:hidden}
   const unzoom=()=>{const vv=window.visualViewport;if(vv&&vv.scale>1.01){meta.setAttribute('content',base+',minimum-scale=1');setTimeout(()=>meta.setAttribute('content',base),300)}};
   if(window.visualViewport){visualViewport.addEventListener('resize',()=>setTimeout(unzoom,400))}
   setInterval(unzoom,1500);
+})();
+</script>
+<script>
+// ---- Fullscreen toggle: any element with data-fs becomes a fullscreen button (hidden where the browser can't do it, e.g. iPhone Safari) ----
+window.FS=(function(){
+  const d=document.documentElement;
+  const can=!!(d.requestFullscreen||d.webkitRequestFullscreen);
+  const is=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  function toggle(){
+    try{
+      if(is()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+      else{const r=(d.requestFullscreen||d.webkitRequestFullscreen).call(d,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{})}
+    }catch(e){}
+  }
+  function label(){document.querySelectorAll('[data-fs]').forEach(b=>{b.textContent=is()?(b.dataset.fsOff||'\u2715'):(b.dataset.fsOn||'\u2922');b.title=is()?'Exit full screen':'Full screen'})}
+  function setup(){
+    document.querySelectorAll('[data-fs]').forEach(b=>{
+      if(!can){b.hidden=true;return}
+      b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle();b.blur()});
+    });
+    document.addEventListener('fullscreenchange',label);document.addEventListener('webkitfullscreenchange',label);label();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+  return{can,is,toggle};
 })();
 </script>
 <script>
